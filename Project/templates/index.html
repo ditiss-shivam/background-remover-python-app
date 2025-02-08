@@ -5,26 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Background Remover</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 100px;
+            max-width: 500px;
+        }
+        .card {
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+        }
+        h1 {
+            font-size: 22px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .custom-file-upload {
+            display: block;
+            padding: 10px;
+            border: 2px dashed #007bff;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .custom-file-upload:hover {
+            background: #e9ecef;
+        }
+        .btn-upload {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            transition: 0.3s ease;
+        }
+        .btn-upload:hover {
+            background: #0056b3;
+        }
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        .alert {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Upload Image to Remove Background</h1>
-        <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="file" name="file" class="form-control-file">
-            </div>
-            <button type="submit" class="btn btn-primary">Remove Background</button>
-        </form>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="mt-4">
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
+    <div class="container">
+        <div class="card">
+            <h1>Upload Image to Remove Background</h1>
+            <form method="POST" enctype="multipart/form-data">
+                <label for="fileInput" class="custom-file-upload">
+                    Click to Upload Image
+                </label>
+                <input type="file" name="file" id="fileInput" class="d-none">
+                <div class="preview-container">
+                    <img id="preview" alt="Image Preview">
+                </div>
+                <button type="submit" class="btn-upload mt-3">Remove Background</button>
+            </form>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="mt-4">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+        </div>
     </div>
+
+    <script>
+        document.getElementById("fileInput").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById("preview");
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
 </body>
 </html>
