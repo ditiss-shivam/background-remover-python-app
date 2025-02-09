@@ -23,7 +23,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uploads.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uploads.db'  # Using SQLite
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
@@ -91,4 +91,6 @@ def upload_file():
     return render_template('index.html', uploads=uploads)
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Ensure database is initialized
     app.run(host='0.0.0.0', debug=False, port=5100)
